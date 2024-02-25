@@ -4,7 +4,8 @@
   "description": "",
   "main": "main.ts",
   "scripts": {
-    "dev": "NODE_ENV='dev' ts-node main.ts"
+    "dev": "NODE_ENV='dev' ts-node main.ts",
+    "devDeploy": "NODE_ENV='dev' ts-node ./deployCommands.ts"
   },
   "author": "",
   "license": "ISC",
