@@ -6,67 +6,80 @@ export interface Config {
     themeColor: string;
 }
 
-export const getConfigKeys = async (guildId: Snowflake): Promise<Config> => {
-    const response: Response = await fetch(`http://localhost/api/v1/config?guildId=${guildId}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
+export default class ApiUtil {
+    private static endpoint: string = "http://localhost/api/v1";
 
-    if (!response.ok) {
-        console.error(`Failed to get config for guild ${guildId}`);
+    static registerGuild = async (guildId: Snowflake, serverName: string): Promise<boolean> => {
+        const response: Response = await fetch(`${this.endpoint}/register?guildId=${guildId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                serverName: serverName,
+            }),
+        });
+
+        if (!response.ok) {
+            console.error(`Failed to register guild ${serverName} with id ${guildId}`);
+            return false;
+        }
+
+        return true;
     }
 
-    const data = await response.json();
-    return data.data;
-}
+    static getConfigKeys = async (guildId: Snowflake): Promise<Config> => {
+        const response: Response = await fetch(`${this.endpoint}/config?guildId=${guildId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
-export const updateConfig = async (guildId: Snowflake, serverName: string|null, themeColor: string|null): Promise<void> => {
-    const dataToSend = {};
-    if (serverName !== null) {
-        dataToSend["server_name"] = serverName;
+        if (!response.ok) {
+            console.error(`Failed to get config for guild ${guildId}`);
+        }
+
+        const data = await response.json();
+        return data.data;
     }
-    if (themeColor !== null) {
-        dataToSend["theme_color"] = themeColor;
+
+    static updateConfig = async (guildId: Snowflake, serverName: string|null, themeColor: string|null): Promise<boolean> => {
+        const dataToSend = {};
+        if (serverName !== null) {
+            dataToSend["server_name"] = serverName;
+        }
+        if (themeColor !== null) {
+            dataToSend["theme_color"] = themeColor;
+        }
+
+        const response: Response = await fetch(`${this.endpoint}/config?guildId=${guildId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: Object.keys(dataToSend).length > 0 ? JSON.stringify(dataToSend) : undefined,
+        });
+
+        if (!response.ok) {
+            console.error(`Failed to update config for guild ${guildId}`);
+            return false;
+        }
+
+        return true;
     }
 
-    const response: Response = await fetch(`http://localhost/api/v1/config?guildId=${guildId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: Object.keys(dataToSend).length > 0 ? JSON.stringify(dataToSend) : undefined,
-    });
+    static updateChannel = async (guildId: Snowflake, channelType: string, channelId: number): Promise<void> => {
+        const response: Response = await fetch(`${this.endpoint}/channels?guildId=${guildId}&channelType=${channelType}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({channelId: channelId}),
+        });
 
-    if (!response.ok) {
-        console.error(`Failed to update config for guild ${guildId}`);
+        if (!response.ok) {
+            console.error(`Failed to update config for guild ${guildId}`);
+        }
     }
-}
-
-export const updateChannel = async (guildId: Snowflake, channelType: string, channelId: number): Promise<void> => {
-    const response: Response = await fetch(`http://localhost/api/v1/channels?guildId=${guildId}&channelType=${channelType}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({channelId: channelId}),
-    });
-
-    if (!response.ok) {
-        console.error(`Failed to update config for guild ${guildId}`);
-    }
-}
-
-export const stringToColour = (str: string) => {
-    let hash = 0;
-    str.split('').forEach(char => {
-        hash = char.charCodeAt(0) + ((hash << 5) - hash)
-    })
-    let colour = '#'
-    for (let i = 0; i < 3; i++) {
-        const value = (hash >> (i * 8)) & 0xff
-        colour += value.toString(16).padStart(2, '0')
-    }
-    return colour
 }

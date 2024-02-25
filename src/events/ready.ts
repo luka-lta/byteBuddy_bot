@@ -7,7 +7,7 @@ export default new Event("ready", async (): Promise<void> => {
     console.log(`The client has been successfully logged in as user ${client.user.username}`)
 
     // Status loop
-    const messages = ["/help", "by Luka", "Hello there"]
+    const messages: string[] = ["/help", "by Luka", "Hello there"]
     while (true) {
         for (const message of messages) {
             client.user.setActivity(message, { type: ActivityType.Playing})

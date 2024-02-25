@@ -1,5 +1,5 @@
 import {Command} from "../structures/Command";
-import {updateChannel} from "../utils/ApiUtil";
+import ApiUtil from "../utils/ApiUtil";
 
 export default new Command({
     data: {
@@ -36,7 +36,7 @@ export default new Command({
         try {
             const channelType: string = interaction.options.get('type').value.toString();
             const channelId: number = parseInt(interaction.options.get('channel').channel.id);
-            await updateChannel(interaction.guild.id, channelType, channelId);
+            await ApiUtil.updateChannel(interaction.guild.id, channelType, channelId);
 
             await interaction.reply({
                 ephemeral: true,

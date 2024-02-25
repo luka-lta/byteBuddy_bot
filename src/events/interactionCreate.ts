@@ -4,18 +4,18 @@ import { Event } from "../structures/Event"
 import { ExtendedInteraction } from "../types/commandType"
 import checkPermissions from "../utils/permissionHandler";
 import CommandStatus from "../utils/CommandStatus";
+import {CommandType} from "../commandType";
 
 export default new Event("interactionCreate", async (interaction) => {
     if (!interaction.isCommand()) return
 
-    const command = client.commands.get(interaction.commandName)
+    const command: CommandType = client.commands.get(interaction.commandName)
 
     if (!command) return
 
     if (await checkPermissions(command, interaction)) return
 
     if (CommandStatus.checkStatus(command.data.name, interaction)) return
-    // await Database.registerOrUpdateMember(<GuildMember>interaction.member).catch(err => console.error(err));
 
     try {
         command.execute({
