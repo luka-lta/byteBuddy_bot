@@ -19,7 +19,6 @@ export const getConfigKeys = async (guildId: Snowflake): Promise<Config> => {
     }
 
     const data = await response.json();
-    console.log(data.data)
     return data.data;
 }
 
@@ -43,4 +42,31 @@ export const updateConfig = async (guildId: Snowflake, serverName: string|null, 
     if (!response.ok) {
         console.error(`Failed to update config for guild ${guildId}`);
     }
+}
+
+export const updateChannel = async (guildId: Snowflake, channelType: string, channelId: number): Promise<void> => {
+    const response: Response = await fetch(`http://localhost/api/v1/channels?guildId=${guildId}&channelType=${channelType}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({channelId: channelId}),
+    });
+
+    if (!response.ok) {
+        console.error(`Failed to update config for guild ${guildId}`);
+    }
+}
+
+export const stringToColour = (str: string) => {
+    let hash = 0;
+    str.split('').forEach(char => {
+        hash = char.charCodeAt(0) + ((hash << 5) - hash)
+    })
+    let colour = '#'
+    for (let i = 0; i < 3; i++) {
+        const value = (hash >> (i * 8)) & 0xff
+        colour += value.toString(16).padStart(2, '0')
+    }
+    return colour
 }

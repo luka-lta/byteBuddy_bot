@@ -1,5 +1,6 @@
 import {Command} from "../structures/Command";
 import {Config, getConfigKeys} from "../utils/ApiUtil";
+import {defaultEmbed} from "../utils/EmbedUtils";
 
 export default new Command({
     data: {
@@ -7,12 +8,21 @@ export default new Command({
         description: "Ping!",
     },
     userPermissions: ['Administrator'],
-    allowDm: false,
+    allowDm: true,
     execute: async ({interaction}): Promise<void> => {
         const data: Config = await getConfigKeys(interaction.guild.id);
+        const embed = await defaultEmbed(interaction.guild.id);
+        embed.setTitle("Pong!");
+        embed.setDescription(`Server: ${interaction.guild.name}`);
+        embed.addFields(
+            {name: "Server ID", value: interaction.guild.id,},
+            {name: "Server name", value: data.serverName},
+            {name: "Theme Color", value: data.themeColor}
+        );
+
         await interaction.reply({
             ephemeral: true,
-            content: `${data.guildId.toString()}, ${data.serverName}, ${data.themeColor}`
+            embeds: [embed]
         });
     }
 })
