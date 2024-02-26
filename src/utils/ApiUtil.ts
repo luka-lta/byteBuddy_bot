@@ -82,4 +82,20 @@ export default class ApiUtil {
             console.error(`Failed to update config for guild ${guildId}`);
         }
     }
+
+    static fetchBirthdays = async (guildId: Snowflake): Promise<any> => {
+        const response: Response = await fetch(`${this.endpoint}/birthdays?guildId=${guildId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            console.error(`Failed to fetch birthdays for guild ${guildId}`);
+        }
+        const data = await response.json();
+        console.log(data)
+        return data;
+    }
 }

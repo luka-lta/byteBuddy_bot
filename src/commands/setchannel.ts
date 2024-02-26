@@ -17,6 +17,10 @@ export default new Command({
                     {
                         name: "Leave",
                         value: "leave"
+                    },
+                    {
+                        name: "Birthday",
+                        value: "birthday"
                     }
                 ],
                 description: "The channel type",
