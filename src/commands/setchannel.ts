@@ -17,6 +17,10 @@ export default new Command({
                     {
                         name: "Leave",
                         value: "leave"
+                    },
+                    {
+                        name: "Birthday",
+                        value: "birthday"
                     }
                 ],
                 description: "The channel type",
@@ -35,8 +39,16 @@ export default new Command({
     execute: async ({interaction}): Promise<void> => {
         try {
             const channelType: string = interaction.options.get('type').value.toString();
-            const channelId: number = parseInt(interaction.options.get('channel').channel.id);
-            await ApiUtil.updateChannel(interaction.guild.id, channelType, channelId);
+            const channelId: string = interaction.options.get('channel').channel.id.toString();
+            const result: boolean = await ApiUtil.updateChannel(interaction.guild.id, channelType, channelId);
+
+            if (!result) {
+                await interaction.reply({
+                    ephemeral: true,
+                    content: `Failed to update the ${channelType} channel!`
+                });
+                return;
+            }
 
             await interaction.reply({
                 ephemeral: true,
