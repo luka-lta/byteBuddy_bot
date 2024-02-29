@@ -1,4 +1,5 @@
 import {Snowflake} from "discord.js";
+import {ChannelResponse} from "../structures/channelResponse";
 
 export interface Config {
     guildId: number;
@@ -29,7 +30,7 @@ export default class ApiUtil {
     }
 
     static getConfigKeys = async (guildId: Snowflake): Promise<Config> => {
-        const response: Response = await fetch(`${this.endpoint}/config?guildId=${guildId}`, {
+        const response: Response = await fetch(`${this.endpoint}/guild?guildId=${guildId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -44,7 +45,7 @@ export default class ApiUtil {
         return data.data;
     }
 
-    static updateConfig = async (guildId: Snowflake, serverName: string|null, themeColor: string|null): Promise<boolean> => {
+    static updateConfig = async (guildId: Snowflake, serverName: string | null, themeColor: string | null): Promise<boolean> => {
         const dataToSend = {};
         if (serverName !== null) {
             dataToSend["server_name"] = serverName;
@@ -53,7 +54,7 @@ export default class ApiUtil {
             dataToSend["theme_color"] = themeColor;
         }
 
-        const response: Response = await fetch(`${this.endpoint}/config?guildId=${guildId}`, {
+        const response: Response = await fetch(`${this.endpoint}/guild?guildId=${guildId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -69,7 +70,7 @@ export default class ApiUtil {
         return true;
     }
 
-    static updateChannel = async (guildId: Snowflake, channelType: string, channelId: number): Promise<void> => {
+    static updateChannel = async (guildId: Snowflake, channelType: string, channelId: string): Promise<boolean> => {
         const response: Response = await fetch(`${this.endpoint}/channels?guildId=${guildId}&channelType=${channelType}`, {
             method: 'POST',
             headers: {
@@ -80,7 +81,26 @@ export default class ApiUtil {
 
         if (!response.ok) {
             console.error(`Failed to update config for guild ${guildId}`);
+            return false;
         }
+
+        return true;
+    }
+
+    static getChannelId = async (guildId: Snowflake, channelType: string): Promise<any> => {
+        const response: Response = await fetch(`${this.endpoint}/channels?guildId=${guildId}&channelType=${channelType}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            console.error(`Failed to get channels for guild ${guildId}`);
+        }
+
+        const data = await response.json();
+        return data.data;
     }
 
     static fetchBirthdays = async (guildId: Snowflake): Promise<any> => {
@@ -94,8 +114,7 @@ export default class ApiUtil {
         if (!response.ok) {
             console.error(`Failed to fetch birthdays for guild ${guildId}`);
         }
-        const data = await response.json();
-        console.log(data)
-        return data;
+
+        return await response.json();
     }
 }
