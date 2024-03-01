@@ -1,5 +1,6 @@
 import {Command} from "../structures/Command";
 import ApiUtil from "../utils/ApiUtil";
+import {errorEmbed} from "../utils/EmbedUtils";
 
 export default new Command({
     data: {
@@ -45,7 +46,7 @@ export default new Command({
             if (!result) {
                 await interaction.reply({
                     ephemeral: true,
-                    content: `Failed to update the ${channelType} channel!`
+                    embeds: [errorEmbed(`Failed to update the channel ${channelType}!`)]
                 });
                 return;
             }

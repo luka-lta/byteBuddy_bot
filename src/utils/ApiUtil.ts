@@ -1,5 +1,6 @@
 import {Snowflake} from "discord.js";
 import {ChannelResponse} from "../structures/channelResponse";
+import {getFormattedDate} from "./DateFormatter";
 
 export interface Config {
     guildId: number;
@@ -116,5 +117,25 @@ export default class ApiUtil {
         }
 
         return await response.json();
+    }
+
+    static setBirthday = async (guildId: Snowflake, userId: Snowflake, date: Date): Promise<boolean> => {
+        const response: Response = await fetch(`${this.endpoint}/birthdays?guildId=${guildId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: userId.toString(),
+                birthdayDate: getFormattedDate(date),
+            }),
+        });
+
+        if (!response.ok) {
+            console.error(`Failed to set birthday for user ${userId}`);
+            return false;
+        }
+
+        return true;
     }
 }

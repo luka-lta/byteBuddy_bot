@@ -9,3 +9,9 @@ export const defaultEmbed = async (guildId: Snowflake): Promise<EmbedBuilder> =>
         .setTimestamp(date);
 }
 
+export const errorEmbed = (message: string): EmbedBuilder => {
+    return new EmbedBuilder()
+        .setColor('#a80f21')
+        .setDescription(message);
+}
+

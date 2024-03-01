@@ -3,6 +3,7 @@ import ApiUtil from "../utils/ApiUtil";
 import {defaultEmbed} from "../utils/EmbedUtils";
 import {EmbedBuilder, GuildBasedChannel, TextChannel} from "discord.js";
 
+// TODO: Maybe fix
 export default class BirthdayHandler {
     static checkBirthdays = async (): Promise<void> => {
         const currentDate: Date = new Date();

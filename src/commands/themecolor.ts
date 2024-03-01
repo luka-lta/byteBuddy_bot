@@ -9,7 +9,7 @@ export default new Command({
             {
                 type: 3,
                 name: "color",
-                description: "The color as hex",
+                description: "The color as hex without the # symbol. Example: FF0000 for red.",
                 required: true,
             },
         ],
