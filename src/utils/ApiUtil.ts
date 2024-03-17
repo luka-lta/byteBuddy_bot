@@ -101,7 +101,7 @@ export default class ApiUtil {
         }
 
         const data = await response.json();
-        return data.data;
+        return data.data['channelId'];
     }
 
     static fetchBirthdays = async (guildId: Snowflake): Promise<any> => {

@@ -2,6 +2,7 @@ import {Command} from "../structures/Command";
 import ApiUtil from "../utils/ApiUtil";
 import {errorEmbed} from "../utils/EmbedUtils";
 
+// TODO: Validate date
 export default new Command({
     data: {
         name: "set-birthday",
