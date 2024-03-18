@@ -2,7 +2,7 @@ import {Snowflake} from "discord.js";
 import {ChannelResponse} from "../structures/channelResponse";
 import {getFormattedDate} from "./DateFormatter";
 
-export interface Config {
+export interface GuildData {
     guildId: number;
     serverName: string;
     themeColor: string;
@@ -30,7 +30,7 @@ export default class ApiUtil {
         return true;
     }
 
-    static getConfigKeys = async (guildId: Snowflake): Promise<Config> => {
+    static getGuildData = async (guildId: Snowflake): Promise<GuildData> => {
         const response: Response = await fetch(`${this.endpoint}/guild?guildId=${guildId}`, {
             method: 'GET',
             headers: {
@@ -141,5 +141,65 @@ export default class ApiUtil {
         }
 
         return true;
+    }
+
+    static fetchDisabledCommands = async (): Promise<Array<string>|null> => {
+        const response: Response = await fetch(`${this.endpoint}/commands/disabled`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            console.error(`Failed to fetch disabled commands`);
+        }
+        const data = await response.json();
+
+        if (data.length === 0) {
+            return null;
+        }
+
+        const disabledCommands = [];
+
+        for (let command of data.data) {
+            disabledCommands.push(command.commandName);
+        }
+
+        return disabledCommands;
+    }
+
+    static disableCommand = async (commandName: string): Promise<boolean> => {
+        const response: Response = await fetch(`${this.endpoint}/commands/disable?name=${commandName}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            console.error(`Failed to disable command ${commandName}`);
+            throw new Error(`Failed to disable command ${commandName}`);
+        }
+
+        const data = await response.json();
+        return data.message !== 'Command is already disabled';
+    }
+
+    static enableCommand = async (commandName: string): Promise<boolean> => {
+        const response: Response = await fetch(`${this.endpoint}/commands/enable?name=${commandName}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            console.error(`Failed to enable command ${commandName}`);
+            throw new Error(`Failed to enable command ${commandName}`);
+        }
+
+        const data = await response.json();
+        return data.message !== 'Command is not disabled';
     }
 }

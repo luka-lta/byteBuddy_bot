@@ -1,17 +1,11 @@
-import { CommandInteraction, EmbedBuilder } from "discord.js"
-// import Database from "./Database"
+import {CommandInteraction, EmbedBuilder} from "discord.js"
+import ApiUtil from "./ApiUtil";
 
 export default class CommandStatus {
     private static disabledCommands: Array<string> = []
 
     static async loadDisabledCommands() {
-        // if (Config.database.required) {
-        //     const disabledCommands = await Database.getDisabledCommands()
-        //
-        //     if (disabledCommands != undefined) {
-        //         this.disabledCommands = disabledCommands
-        //     }
-        // }
+        this.disabledCommands = await ApiUtil.fetchDisabledCommands()
     }
 
     static addToCache(commandName: string) {
