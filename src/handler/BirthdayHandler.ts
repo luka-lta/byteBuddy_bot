@@ -32,7 +32,7 @@ export default class BirthdayHandler {
                         continue;
                     }
 
-                    const birthdayChannel = await guild.channels.fetch(channelId.channelId) as TextChannel;
+                    const birthdayChannel = await guild.channels.fetch(channelId) as TextChannel;
                     const embed: EmbedBuilder = await defaultEmbed(guildId);
                     embed.setTitle('🎉 Alles Gute zum Geburtstag!')
                     embed.setDescription(`Herzlichen Glückwunsch, ${user.tag}! 🎂🥳`)
