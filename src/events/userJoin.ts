@@ -6,8 +6,7 @@ import {defaultEmbed} from "../utils/EmbedUtils";
 export default new Event("guildMemberAdd", async (user: GuildMember): Promise<void> => {
     const guild: Guild = user.guild;
     const welcomeChannelId = await ApiUtil.getChannelId(guild.id, "welcome");
-    console.log(welcomeChannelId)
-    if (welcomeChannelId === "") return;
+    if (welcomeChannelId === null) return;
 
     const channel: TextChannel = guild.channels.cache.get(welcomeChannelId) as TextChannel;
     if (channel === undefined) return;

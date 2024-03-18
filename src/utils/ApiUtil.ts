@@ -88,7 +88,7 @@ export default class ApiUtil {
         return true;
     }
 
-    static getChannelId = async (guildId: Snowflake, channelType: string): Promise<any> => {
+    static getChannelId = async (guildId: Snowflake, channelType: string): Promise<string|null> => {
         const response: Response = await fetch(`${this.endpoint}/channels?guildId=${guildId}&channelType=${channelType}`, {
             method: 'GET',
             headers: {
@@ -98,6 +98,10 @@ export default class ApiUtil {
 
         if (!response.ok) {
             console.error(`Failed to get channels for guild ${guildId}`);
+        }
+
+        if (response.status === 404) {
+            return null;
         }
 
         const data = await response.json();

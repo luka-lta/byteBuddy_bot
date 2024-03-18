@@ -5,9 +5,9 @@ import {defaultEmbed} from "../utils/EmbedUtils";
 
 export default new Event("guildMemberRemove", async (user: GuildMember): Promise<void> => {
     const guild: Guild = user.guild;
-    const leaveChannelId = await ApiUtil.getChannelId(guild.id, "leave");
-    console.log(leaveChannelId)
-    if (leaveChannelId === "") return;
+    const leaveChannelId: string|null = await ApiUtil.getChannelId(guild.id, "leave");
+
+    if (leaveChannelId === null) return;
 
     const channel: TextChannel = guild.channels.cache.get(leaveChannelId) as TextChannel;
     if (channel === undefined) return;
