@@ -1,6 +1,6 @@
 import {Snowflake} from "discord.js";
-import {ChannelResponse} from "../structures/channelResponse";
 import {getFormattedDate} from "./DateFormatter";
+import {Guild} from "../value/Guild";
 
 export interface GuildData {
     guildId: number;
@@ -30,7 +30,7 @@ export default class ApiUtil {
         return true;
     }
 
-    static getGuildData = async (guildId: Snowflake): Promise<GuildData> => {
+    static getGuildData = async (guildId: Snowflake): Promise<Guild> => {
         const response: Response = await fetch(`${this.endpoint}/guild?guildId=${guildId}`, {
             method: 'GET',
             headers: {
@@ -43,7 +43,7 @@ export default class ApiUtil {
         }
 
         const data = await response.json();
-        return data.data;
+        return Guild.create(data.data);
     }
 
     static updateConfig = async (guildId: Snowflake, serverName: string | null, themeColor: string | null): Promise<boolean> => {
@@ -151,12 +151,9 @@ export default class ApiUtil {
             },
         });
 
-        if (!response.ok) {
-            throw new Error(`Failed to fetch disabled commands`);
-        }
         const data = await response.json();
 
-        if (data.length === 0) {
+        if (data.message === 'No disabled commands found') {
             return null;
         }
 
@@ -178,7 +175,6 @@ export default class ApiUtil {
         });
 
         if (!response.ok) {
-            console.error(`Failed to disable command ${commandName}`);
             throw new Error(`Failed to disable command ${commandName}`);
         }
 
@@ -195,7 +191,6 @@ export default class ApiUtil {
         });
 
         if (!response.ok) {
-            console.error(`Failed to enable command ${commandName}`);
             throw new Error(`Failed to enable command ${commandName}`);
         }
 
