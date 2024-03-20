@@ -144,7 +144,7 @@ export default class ApiUtil {
     }
 
     static fetchDisabledCommands = async (): Promise<Array<string>|null> => {
-        const response: Response = await fetch(`${this.endpoint}/commands/disabled`, {
+        const response: Response = await fetch(`${this.endpoint}/commands?status=disabled`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ export default class ApiUtil {
         });
 
         if (!response.ok) {
-            console.error(`Failed to fetch disabled commands`);
+            throw new Error(`Failed to fetch disabled commands`);
         }
         const data = await response.json();
 
@@ -201,5 +201,22 @@ export default class ApiUtil {
 
         const data = await response.json();
         return data.message !== 'Command is not disabled';
+    }
+
+    static deployCommandsToDatabase = async (commands: Array<any>): Promise<boolean> => {
+        const response: Response = await fetch(`${this.endpoint}/commands/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(commands),
+        });
+
+        if (!response.ok) {
+            console.error(`Failed to deploy commands to database`);
+            return false;
+        }
+
+        return true;
     }
 }

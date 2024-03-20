@@ -5,7 +5,7 @@ import {defaultEmbed} from "../utils/EmbedUtils";
 export default new Command({
     data: {
         name: "ping",
-        description: "Ping!",
+        description: "Ping",
     },
     userPermissions: ['Administrator'],
     allowDm: true,

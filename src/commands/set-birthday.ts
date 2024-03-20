@@ -6,7 +6,7 @@ import {errorEmbed} from "../utils/EmbedUtils";
 export default new Command({
     data: {
         name: "set-birthday",
-        description: "Set your Birthday!",
+        description: "Set your Birthday",
         options: [
             {
                 type: 3,

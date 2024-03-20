@@ -5,7 +5,7 @@ import {EmbedBuilder} from "discord.js";
 export default new Command({
    data: {
          name: "serverinfo",
-         description: "Get the server info!",
+         description: "Get the server info",
     },
     allowDm: true,
     execute: async ({interaction}): Promise<void> => {
