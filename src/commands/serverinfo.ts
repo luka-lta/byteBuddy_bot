@@ -5,7 +5,7 @@ import {EmbedBuilder} from "discord.js";
 export default new Command({
    data: {
          name: "serverinfo",
-         description: "Get the server info!",
+         description: "Get the server info",
     },
     allowDm: true,
     execute: async ({interaction}): Promise<void> => {
@@ -17,7 +17,7 @@ export default new Command({
             { name: "Member:", value: String(interaction.guild.memberCount) },
             { name: "Channel:", value: String(interaction.guild.channels.channelCountWithoutThreads) },
             { name: "Boosts:", value: String(interaction.guild.premiumSubscriptionCount) },
-            { name: "Servererstellung:", value: createdAt, inline: false },
+            { name: "Server creation:", value: createdAt, inline: false },
         );
         embed.setThumbnail(interaction.guild.iconURL());
 

@@ -4,7 +4,7 @@ import ApiUtil from "../utils/ApiUtil";
 export default new Command({
     data: {
         name: "setthemecolor",
-        description: "Set the themecolor!",
+        description: "Set the themecolor",
         options: [
             {
                 type: 3,

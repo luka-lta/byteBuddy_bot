@@ -5,7 +5,7 @@ import {errorEmbed} from "../utils/EmbedUtils";
 export default new Command({
     data: {
         name: "setchannel",
-        description: "Set the channels!",
+        description: "Set the channels",
         options: [
             {
                 type: 3,

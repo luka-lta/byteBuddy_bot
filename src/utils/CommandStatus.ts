@@ -2,9 +2,9 @@ import {CommandInteraction, EmbedBuilder} from "discord.js"
 import ApiUtil from "./ApiUtil";
 
 export default class CommandStatus {
-    private static disabledCommands: Array<string> = []
+    private static disabledCommands: Array<string>|null = []
 
-    static async loadDisabledCommands() {
+    static async loadDisabledCommands(): Promise<void> {
         this.disabledCommands = await ApiUtil.fetchDisabledCommands()
     }
 
@@ -17,6 +17,10 @@ export default class CommandStatus {
     }
 
     static checkStatus(commandName: string, interaction: CommandInteraction) {
+        if (this.disabledCommands === null) {
+            return false
+        }
+
         if (this.disabledCommands.includes(commandName)) {
             const embed = new EmbedBuilder()
                 .setColor("#fc030b")
