@@ -4,6 +4,7 @@ import ApiUtil from "./ApiUtil";
 export const defaultEmbed = async (guildId: Snowflake): Promise<EmbedBuilder> => {
     const color: ColorResolvable = await ApiUtil.getGuildData(guildId).then(config => config.themeColor) as ColorResolvable;
     const date = new Date();
+    console.log(color)
     return new EmbedBuilder()
         .setColor(color)
         .setTimestamp(date);

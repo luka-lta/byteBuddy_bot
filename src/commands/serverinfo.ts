@@ -17,7 +17,7 @@ export default new Command({
             { name: "Member:", value: String(interaction.guild.memberCount) },
             { name: "Channel:", value: String(interaction.guild.channels.channelCountWithoutThreads) },
             { name: "Boosts:", value: String(interaction.guild.premiumSubscriptionCount) },
-            { name: "Servererstellung:", value: createdAt, inline: false },
+            { name: "Server creation:", value: createdAt, inline: false },
         );
         embed.setThumbnail(interaction.guild.iconURL());
 

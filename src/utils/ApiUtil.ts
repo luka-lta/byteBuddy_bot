@@ -153,6 +153,7 @@ export default class ApiUtil {
 
         const data = await response.json();
 
+
         if (data.message === 'No disabled commands found') {
             return null;
         }
