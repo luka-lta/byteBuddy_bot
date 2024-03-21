@@ -1,36 +1,47 @@
-import {Snowflake} from "discord.js";
+import {Snowflake, TextChannel} from "discord.js";
 import {getFormattedDate} from "./DateFormatter";
-import {Guild} from "../value/Guild";
-
-export interface GuildData {
-    guildId: number;
-    serverName: string;
-    themeColor: string;
-}
+import {ByteBuddyGuild} from "../value/ByteBuddyGuild";
+import {ByteBuddyChannel} from "../value/ByteBuddyChannel";
 
 export default class ApiUtil {
     private static endpoint: string = "http://localhost/api/v1";
 
-    static registerGuild = async (guildId: Snowflake, serverName: string): Promise<boolean> => {
-        const response: Response = await fetch(`${this.endpoint}/register?guildId=${guildId}`, {
+    static checkHealth = async (): Promise<boolean> => {
+        try {
+            const response: Response = await fetch(`${this.endpoint}/health`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            return response.ok;
+        } catch (e) {
+            return false;
+        }
+    }
+
+
+    static registerGuild = async (guild: ByteBuddyGuild): Promise<boolean> => {
+        const response: Response = await fetch(`${this.endpoint}/register?guildId=${guild.guildId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                serverName: serverName,
+                serverName: guild.serverName,
             }),
         });
 
         if (!response.ok) {
-            console.error(`Failed to register guild ${serverName} with id ${guildId}`);
+            console.error(`Failed to register guild ${guild.serverName} with id ${guild.guildId}`);
             return false;
         }
 
         return true;
     }
 
-    static getGuildData = async (guildId: Snowflake): Promise<Guild> => {
+    static getGuildData = async (guildId: Snowflake): Promise<ByteBuddyGuild> => {
         const response: Response = await fetch(`${this.endpoint}/guild?guildId=${guildId}`, {
             method: 'GET',
             headers: {
@@ -43,7 +54,7 @@ export default class ApiUtil {
         }
 
         const data = await response.json();
-        return Guild.create(data.data);
+        return ByteBuddyGuild.create(data.data);
     }
 
     static updateConfig = async (guildId: Snowflake, serverName: string | null, themeColor: string | null): Promise<boolean> => {
@@ -88,7 +99,7 @@ export default class ApiUtil {
         return true;
     }
 
-    static getChannelId = async (guildId: Snowflake, channelType: string): Promise<string|null> => {
+    static getChannelByType = async (guildId: Snowflake, channelType: string): Promise<TextChannel|null> => {
         const response: Response = await fetch(`${this.endpoint}/channels?guildId=${guildId}&channelType=${channelType}`, {
             method: 'GET',
             headers: {
@@ -105,7 +116,8 @@ export default class ApiUtil {
         }
 
         const data = await response.json();
-        return data.data['channelId'];
+        const channel: ByteBuddyChannel = ByteBuddyChannel.create(data.data);
+        return channel.asTextChannel(guildId);
     }
 
     static fetchBirthdays = async (guildId: Snowflake): Promise<any> => {
@@ -175,7 +187,7 @@ export default class ApiUtil {
             }
         });
 
-        if (!response.ok) {
+        if (response.status > 500) {
             throw new Error(`Failed to disable command ${commandName}`);
         }
 
@@ -191,7 +203,7 @@ export default class ApiUtil {
             }
         });
 
-        if (!response.ok) {
+        if (response.status > 500) {
             throw new Error(`Failed to enable command ${commandName}`);
         }
 

@@ -1,9 +1,15 @@
 import CommandStatus from "./src/utils/CommandStatus";
 import { ExtendedClient } from "./src/structures/Client"
+import ApiUtil from "./src/utils/ApiUtil";
 require('dotenv').config()
-// import Database from "./src/utils/Database";
-//
-// Database.connect()
+
+ApiUtil.checkHealth().then((healthy) => {
+   if (!healthy) {
+       console.log("API is not healthy, shutting down")
+       process.exit(1)
+   }
+});
+
 try {
     CommandStatus.loadDisabledCommands()
 } catch (e) {

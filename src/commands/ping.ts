@@ -1,7 +1,7 @@
 import {Command} from "../structures/Command";
-import ApiUtil, {GuildData} from "../utils/ApiUtil";
+import ApiUtil from "../utils/ApiUtil";
 import {defaultEmbed} from "../utils/EmbedUtils";
-import {Guild} from "../value/Guild";
+import {ByteBuddyGuild} from "../value/ByteBuddyGuild";
 
 export default new Command({
     data: {
@@ -11,7 +11,7 @@ export default new Command({
     userPermissions: ['Administrator'],
     allowDm: true,
     execute: async ({interaction}): Promise<void> => {
-        const data: Guild = await ApiUtil.getGuildData(interaction.guild.id);
+        const data: ByteBuddyGuild = await ApiUtil.getGuildData(interaction.guild.id);
         const embed = await defaultEmbed(interaction.guild.id);
         embed.setTitle("Pong!");
         embed.setDescription(`Server: ${interaction.guild.name}`);

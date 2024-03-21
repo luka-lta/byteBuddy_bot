@@ -6,7 +6,7 @@ interface GuildProps {
     themeColor: string;
 }
 
-export class Guild {
+export class ByteBuddyGuild {
     private readonly _guildId: Snowflake;
     private readonly _serverName: string;
     private readonly _themeColor: string;
@@ -17,8 +17,8 @@ export class Guild {
         this._themeColor = props.themeColor;
     }
 
-    static create(props: GuildProps): Guild {
-        return new Guild(props);
+    static create(props: GuildProps): ByteBuddyGuild {
+        return new ByteBuddyGuild(props);
     }
 
     get guildId(): Snowflake {

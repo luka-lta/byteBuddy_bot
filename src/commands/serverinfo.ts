@@ -15,7 +15,7 @@ export default new Command({
         embed.setTitle(interaction.guild.name)
         embed.addFields(
             { name: "Member:", value: String(interaction.guild.memberCount) },
-            { name: "Channel:", value: String(interaction.guild.channels.channelCountWithoutThreads) },
+            { name: "ByteBuddyChannel:", value: String(interaction.guild.channels.channelCountWithoutThreads) },
             { name: "Boosts:", value: String(interaction.guild.premiumSubscriptionCount) },
             { name: "Server creation:", value: createdAt, inline: false },
         );

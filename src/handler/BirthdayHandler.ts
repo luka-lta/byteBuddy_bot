@@ -1,7 +1,7 @@
 import {client} from "../../main";
 import ApiUtil from "../utils/ApiUtil";
 import {defaultEmbed} from "../utils/EmbedUtils";
-import {EmbedBuilder, GuildBasedChannel, TextChannel} from "discord.js";
+import {EmbedBuilder} from "discord.js";
 
 // TODO: Maybe fix
 export default class BirthdayHandler {
@@ -25,14 +25,13 @@ export default class BirthdayHandler {
                 const userBirthday = birthday.slice(5);
                 if (userBirthday === currentMonthDayString) {
                     const user = await client.users.fetch(user_id);
-                    const channelId = await ApiUtil.getChannelId(guildId, 'birthday');
+                    const birthdayChannel = await ApiUtil.getChannelByType(guildId, 'birthday');
 
-                    if (!channelId) {
+                    if (!birthdayChannel) {
                         console.error(`Es wurde kein Birthday-Channel für die Guild ${guildId} gefunden.`);
                         continue;
                     }
 
-                    const birthdayChannel = await guild.channels.fetch(channelId) as TextChannel;
                     const embed: EmbedBuilder = await defaultEmbed(guildId);
                     embed.setTitle('🎉 Alles Gute zum Geburtstag!')
                     embed.setDescription(`Herzlichen Glückwunsch, ${user.tag}! 🎂🥳`)
